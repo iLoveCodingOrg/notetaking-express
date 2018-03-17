@@ -1,0 +1,21 @@
+{
+  "name": "notetaking",
+  "version": "1.0.0",
+  "description": "This is a note taking app made with express.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "express.js",
+    "mongodb",
+    "passport.js",
+    "note-taking"
+  ],
+  "author": "Aziz Ali",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3"
+  }
+}
