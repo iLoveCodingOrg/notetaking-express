@@ -140,7 +140,25 @@ function loginInputValidation(req, res, next){
 }
 
 function findUser(req, res, next){
-  next()
+  const { email } = req.body
+  UserModel
+    .findOne({ email: email })
+    .then((userDocument)=>{
+      if(!userDocument){
+        res
+          .status(404)
+          .send(`${email} is not registered`)
+      }else{
+        req.userDocument = userDocument
+        next()
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res
+        .status(500)
+        .send('Error Happened')
+    })
 }
 
 function checkPassword(req, res, next){
@@ -148,7 +166,7 @@ function checkPassword(req, res, next){
 }
 
 function giveAccess(req, res, next){
-  res.send('successful login')
+  res.send(req.userDocument)
 }
 
 module.exports = router
