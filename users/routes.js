@@ -7,6 +7,7 @@ router.post('/login', (req, res, next)=>{
 
 router.post('/register',
   registerInputValidation,
+  isEmailRegistered,
   (req, res, next)=>{
     const newUser = new UserModel({
       firstName: req.body.firstName,
@@ -76,4 +77,24 @@ function registerInputValidation(req, res, next){
     next()
   }
 }
+
+function isEmailRegistered(req, res, next){
+  const { email } = req.body
+  
+  UserModel.findOne({ email })
+    .then((result)=>{
+      if(result){
+        res
+          .status(400)
+          .send(`${email} is already registered`)
+      }else{
+        next()
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res.status(500).send('Error happened')
+    })
+}
+
 module.exports = router
