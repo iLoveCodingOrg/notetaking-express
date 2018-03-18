@@ -3,12 +3,42 @@ const NoteModel = require('./model')
 
 // get all
 router.get('/', (req, res, next)=>{
-  res.send('All notes')
+  NoteModel.find()
+    .then((results)=>{
+      if(!results){
+        res
+          .status(404)
+          .send('No Notes found')
+      } else {
+        res.json(results)
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res
+        .status(500)
+        .send('Error Happened')
+    })
 })
 
 // get single
 router.get('/:id', (req, res, next)=>{
-  res.send('get note by id')
+  NoteModel.findById(req.params.id)
+    .then((results)=>{
+      if(!results){
+        res
+          .status(404)
+          .send('No Note found')
+      } else {
+        res.json(results)
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res
+        .status(500)
+        .send('Error Happened')
+    })
 })
 
 // Create
