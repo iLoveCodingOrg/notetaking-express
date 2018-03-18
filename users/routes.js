@@ -2,9 +2,12 @@ const router = require('express').Router()
 const UserModel = require('./model')
 const bcrypt = require('bcryptjs')
 
-router.post('/login', (req, res, next)=>{
-  res.send('login')
-})
+router.post('/login',
+  loginInputValidation,
+  findUser,
+  checkPassword,
+  giveAccess
+)
 
 router.post('/register',
   registerInputValidation,
@@ -113,6 +116,39 @@ function hashPassword(req, res, next){
         }
       })
   })
+}
+
+function loginInputValidation(req, res, next){
+  const { email, password } = req.body
+  const missingFileds = []
+
+  if(!email){
+    missingFileds.push('email')
+  }
+  if(!password){
+    missingFileds.push('password')
+  }
+
+  if(missingFileds.length){
+    res
+      .status(400)
+      .send(`The following fields are missing: ${missingFileds.join(', ')}`)
+  }else{
+    next()
+  }
+  
+}
+
+function findUser(req, res, next){
+  next()
+}
+
+function checkPassword(req, res, next){
+  next()
+}
+
+function giveAccess(req, res, next){
+  res.send('successful login')
 }
 
 module.exports = router
