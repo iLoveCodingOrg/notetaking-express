@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const NoteModel = require('./model')
 
 // get all
 router.get('/', (req, res, next)=>{
@@ -12,7 +13,25 @@ router.get('/:id', (req, res, next)=>{
 
 // Create
 router.post('/', (req, res, next)=>{
-  res.send('Create note')
+  const newNote = new NoteModel({
+    title: 'Hello note',
+    body: 'some body text'
+  })
+
+  newNote
+    .save()
+    .then((document)=>{
+      if(document){
+        res.json(document)
+      }else{
+        res.send('document did not save')
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res.send('error happened')
+    })
+
 })
 
 // Update
