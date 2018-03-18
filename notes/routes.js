@@ -67,7 +67,27 @@ router.post('/',
 
 // Update
 router.put('/:id', (req, res, next)=>{
-  res.send('update note')
+  NoteModel.findOneAndUpdate({ _id: req.params.id}, {
+    title: req.body.title,
+    body: req.body.body
+  }, {
+    new: true
+  })
+    .then((results)=>{
+      if(!results){
+        res
+          .status(404)
+          .send('No Note found')
+      } else {
+        res.json(results)
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res
+        .status(500)
+        .send('Error Happened')
+    })
 })
 
 // Delete
