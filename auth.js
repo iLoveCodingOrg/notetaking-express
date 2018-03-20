@@ -5,9 +5,9 @@ const UserModel = require('./users/model')
 passport.use(new BearerStrategy(
   function(accessToken, done) {
     UserModel.findOne({ accessToken })
-      .then((foundeUser)=>{
-        if(foundeUser){
-          return done(null, foundeUser)
+      .then((foundUser)=>{
+        if(foundUser){
+          return done(null, foundUser)
         }else{
           return done(null, false)
         }

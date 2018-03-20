@@ -75,6 +75,8 @@ router.post('/',
 router.put('/:id', 
   passport.authenticate('bearer', { session: false }),
   updateInputValidation,
+  findNote,
+  isAuthor,
   (req, res, next)=>{
     NoteModel.findOneAndUpdate({ _id: req.params.id}, req.updateObj, {
       new: true
@@ -99,6 +101,8 @@ router.put('/:id',
 // Delete
 router.delete('/:id',
   passport.authenticate('bearer', { session: false }),
+  findNote,
+  isAuthor,
   (req, res, next)=>{
     NoteModel.findOneAndRemove({ _id: req.params.id})
       .then((results)=>{
@@ -155,5 +159,35 @@ function updateInputValidation(req, res, next){
 
   next()
 }
+
+function findNote(req, res, next){
+  NoteModel.findById(req.params.id)
+    .then((noteDocument)=>{
+      if(!noteDocument){
+        res.status(404).send('Note not found')
+      }else{
+        req.noteDocument = noteDocument
+        next()
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      res
+        .status(500)
+        .send('Error Happened')
+    })
+}
+
+function isAuthor(req, res, next){
+  if(req.user._id.equals(req.noteDocument.authorId)){
+    next()
+  }else{
+    res
+      .status(401)
+      .send('You are not authorized to take this action')
+  }
+}
+
+
 
 module.exports = router
