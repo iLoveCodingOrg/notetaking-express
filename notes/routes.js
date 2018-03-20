@@ -1,5 +1,12 @@
 const router = require('express').Router()
 const NoteModel = require('./model')
+const passport = require('passport')
+const BearerStrategy = require('passport-http-bearer')
+
+passport.use(new BearerStrategy(
+  function(token, done) {
+  }
+));
 
 // get all
 router.get('/', (req, res, next)=>{
