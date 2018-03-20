@@ -49,9 +49,11 @@ router.post('/',
   passport.authenticate('bearer', { session: false }),
   inputValidation,
   (req, res, next)=>{
+    console.log(req.user)
     const newNote = new NoteModel({
       title: req.body.title,
-      body: req.body.body
+      body: req.body.body,
+      authorId: req.user._id
     })
 
     newNote

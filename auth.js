@@ -7,7 +7,7 @@ passport.use(new BearerStrategy(
     UserModel.findOne({ accessToken })
       .then((foundeUser)=>{
         if(foundeUser){
-          return done(null, true)
+          return done(null, foundeUser)
         }else{
           return done(null, false)
         }
