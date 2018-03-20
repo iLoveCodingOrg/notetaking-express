@@ -4,7 +4,6 @@ const passport = require('../auth')
 
 // get all
 router.get('/',
-  passport.authenticate('bearer', { session: false }),
   (req, res, next)=>{
     NoteModel.find()
       .then((results)=>{
@@ -47,6 +46,7 @@ router.get('/:id', (req, res, next)=>{
 
 // Create
 router.post('/',
+  passport.authenticate('bearer', { session: false }),
   inputValidation,
   (req, res, next)=>{
     const newNote = new NoteModel({
@@ -71,6 +71,7 @@ router.post('/',
 
 // Update
 router.put('/:id', 
+  passport.authenticate('bearer', { session: false }),
   updateInputValidation,
   (req, res, next)=>{
     NoteModel.findOneAndUpdate({ _id: req.params.id}, req.updateObj, {
@@ -94,24 +95,27 @@ router.put('/:id',
 })
 
 // Delete
-router.delete('/:id', (req, res, next)=>{
-  NoteModel.findOneAndRemove({ _id: req.params.id})
-    .then((results)=>{
-      if(!results){
+router.delete('/:id',
+  passport.authenticate('bearer', { session: false }),
+  (req, res, next)=>{
+    NoteModel.findOneAndRemove({ _id: req.params.id})
+      .then((results)=>{
+        if(!results){
+          res
+            .status(404)
+            .send('No Note found')
+        } else {
+          res.send('Successfully deleted')
+        }
+      })
+      .catch((err)=>{
+        console.log(err)
         res
-          .status(404)
-          .send('No Note found')
-      } else {
-        res.send('Successfully deleted')
-      }
-    })
-    .catch((err)=>{
-      console.log(err)
-      res
-        .status(500)
-        .send('Error Happened')
-    })
-})
+          .status(500)
+          .send('Error Happened')
+      })
+  }
+)
 
 function inputValidation(req, res, next){
   const { title, body } = req.body
