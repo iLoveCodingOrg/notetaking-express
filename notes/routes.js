@@ -5,28 +5,39 @@ const BearerStrategy = require('passport-http-bearer')
 
 passport.use(new BearerStrategy(
   function(token, done) {
+    console.log(token)
+    // done(err)
+    
+    if(token === 'correct'){
+      return done(null, true)
+    }else{
+      return done(null, false)
+    }
   }
 ));
 
 // get all
-router.get('/', (req, res, next)=>{
-  NoteModel.find()
-    .then((results)=>{
-      if(!results){
+router.get('/',
+  passport.authenticate('bearer', { session: false }),
+  (req, res, next)=>{
+    NoteModel.find()
+      .then((results)=>{
+        if(!results){
+          res
+            .status(404)
+            .send('No Notes found')
+        } else {
+          res.json(results)
+        }
+      })
+      .catch((err)=>{
+        console.log(err)
         res
-          .status(404)
-          .send('No Notes found')
-      } else {
-        res.json(results)
-      }
-    })
-    .catch((err)=>{
-      console.log(err)
-      res
-        .status(500)
-        .send('Error Happened')
-    })
-})
+          .status(500)
+          .send('Error Happened')
+      })
+  }
+)
 
 // get single
 router.get('/:id', (req, res, next)=>{
