@@ -7,7 +7,9 @@ const PORT = 4000
 const noteRoutes = require('./notes/routes')
 const userRoutes = require('./users/routes')
 
-mongoose.connect('mongodb://localhost/notetaking')
+const { username, password } = process.env
+
+mongoose.connect(`mongodb://${username}:${password}@ds121099.mlab.com:21099/notetaking`)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
